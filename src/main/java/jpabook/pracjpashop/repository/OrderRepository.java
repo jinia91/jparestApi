@@ -1,57 +1,27 @@
 package jpabook.pracjpashop.repository;
 
-import jpabook.pracjpashop.domain.Member;
 import jpabook.pracjpashop.domain.Order;
-import lombok.RequiredArgsConstructor;
+import jpabook.pracjpashop.dto.OrderDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-public class OrderRepository {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    private final EntityManager em;
+    @Query("select o " +
+            "from  Order o " +
+            "join fetch o.member m " +
+            "join  fetch o.delivery d")
+    public List<Order> findAllWithMemberDelivery();
 
-    public void save(Order order) {
-
-        em.persist(order);
-
-    }
-
-    public Order findOne(Long id) {
-        return em.find(Order.class, id);
-    }
-
-
-    //jpql로 동적 쿼리 만들기는 노답
-    public List<Order> findAllByCriteria(OrderSearch orderSearch) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Order> cq = cb.createQuery(Order.class);
-        Root<Order> o = cq.from(Order.class);
-        Join<Order, Member> m = o.join("member", JoinType.INNER); //회원과 조인
-        List<Predicate> criteria = new ArrayList<>();
-//주문 상태 검색
-        if (orderSearch.getOrderStatus() != null) {
-            Predicate status = cb.equal(o.get("status"),
-                    orderSearch.getOrderStatus());
-            criteria.add(status);
-        }
-//회원 이름 검색
-        if (StringUtils.hasText(orderSearch.getMemberName())) {
-            Predicate name =
-                    cb.like(m.<String>get("name"), "%" +
-                            orderSearch.getMemberName() + "%");
-            criteria.add(name);
-        }
-        cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
-        TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000);
-        return query.getResultList();
-    }
+    // 페치는 컬럼을 조작해서 jpql -> sql로 번역하기때문에 컬럼을 지정할때는 join을 쓰기
+    @Query("select new jpabook.pracjpashop.dto.OrderDto(o.id, m.name, o.orderDate, d.address, o.status)  " +
+            "from  Order o " +
+            "join o.member m " +
+            "join o.delivery d")
+    public List<OrderDto> findAllDtoWithMemberDelivery();
 
 }

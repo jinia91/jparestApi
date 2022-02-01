@@ -24,8 +24,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 	implementation 'com.querydsl:querydsl-jpa'
+	implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '3.0.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.6.3'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'

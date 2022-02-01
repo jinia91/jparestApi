@@ -4,7 +4,7 @@ import jpabook.pracjpashop.domain.*;
 import jpabook.pracjpashop.exception.NotEnoughStockException;
 import jpabook.pracjpashop.domain.item.Book;
 import jpabook.pracjpashop.domain.item.Item;
-import jpabook.pracjpashop.repository.OrderRepository;
+import jpabook.pracjpashop.repository.OrderRepositoryOld;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,7 @@ class OrderServiceTest {
     @Autowired
     EntityManager em;
     @Autowired
-    OrderRepository orderRepository;
+    OrderRepositoryOld orderRepositoryOld;
 
     @Test
     public void 상품주문() throws Exception {
@@ -46,7 +46,7 @@ class OrderServiceTest {
         Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
 
         // then
-        Order one = orderRepository.findOne(orderId);
+        Order one = orderRepositoryOld.findOne(orderId);
         assertThat(one.getStatus()).isEqualTo(OrderStatus.ORDER)
                 .withFailMessage("상태는 주문이여야함");
         assertThat(one.getOrderItemList().size())
@@ -82,7 +82,7 @@ class OrderServiceTest {
 
 
         // then
-        Order one = orderRepository.findOne(orderId);
+        Order one = orderRepositoryOld.findOne(orderId);
         assertThat(one.getStatus()).isEqualTo(OrderStatus.CANCEL)
                 .withFailMessage("상태는 취소가 되어야함");
     }

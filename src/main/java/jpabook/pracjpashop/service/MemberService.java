@@ -44,7 +44,7 @@ public class MemberService {
         if (!foundMembers.isEmpty()) throw new IllegalArgumentException("이미 존재하는 회원");
     }
 
-    @PostConstruct
+//    @PostConstruct
     private void buildData(){
         Member member1 = new Member();
         member1.setName("testA");
@@ -62,4 +62,9 @@ public class MemberService {
 
     }
 
+    @Transactional
+    public void editMember(Long memberId, String name) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        memberOptional.ifPresent(member -> member.setName(name));
+    }
 }

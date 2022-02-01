@@ -5,21 +5,21 @@ import jpabook.pracjpashop.domain.Member;
 import jpabook.pracjpashop.domain.Order;
 import jpabook.pracjpashop.domain.OrderItem;
 import jpabook.pracjpashop.domain.item.Item;
-import jpabook.pracjpashop.repository.ItemRepository;
-import jpabook.pracjpashop.repository.MemberRepository;
-import jpabook.pracjpashop.repository.OrderRepository;
-import jpabook.pracjpashop.repository.OrderSearch;
+import jpabook.pracjpashop.dto.OrderDto;
+import jpabook.pracjpashop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class OrderService {
 
+    private final OrderRepositoryOld orderRepositoryOld;
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
@@ -45,15 +45,24 @@ public class OrderService {
     // 취소
 
     public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findOne(orderId);
-        order.cancel();
+        Optional<Order> orderOp = orderRepository.findById(orderId);
+        orderOp.ifPresent(Order::cancel);
     }
 
     // 검색
 
     public List<Order> findByCriteria(OrderSearch orderSearch) {
-        return orderRepository.findAllByCriteria(orderSearch);
+        return orderRepositoryOld.findAllByCriteria(orderSearch);
     }
+
+    public List<Order> findAllByMemberDelivery(){
+        return orderRepository.findAllWithMemberDelivery();
+    }
+
+    public List<OrderDto> findAllDtoByMemberDelivery(){
+        return orderRepository.findAllDtoWithMemberDelivery();
+    }
+
 
 //    public List<Order> findOrders(OrderSearch orderSearch){
 //        return orderRepository.findAll(orderSearch);

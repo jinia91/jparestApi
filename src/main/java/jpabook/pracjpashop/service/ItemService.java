@@ -32,7 +32,7 @@ public class ItemService {
     }
 
 
-    @PostConstruct
+//    @PostConstruct
     private void buildData() {
 
         Book book1 = new Book();
