@@ -8,8 +8,6 @@ import jpabook.pracjpashop.domain.item.Item;
 import jpabook.pracjpashop.dto.OrderDto;
 import jpabook.pracjpashop.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,12 +64,18 @@ public class OrderService {
         return orderRepository.findAllDtoWithMemberDelivery();
     }
 
+
+
     public List<Order> findAllByItemList(){
         return orderRepository.findAllByItemList();
     }
-
-    public List<Order> findAllByItemListNotFetch(){
-        return orderRepositoryOld.findAllWithMemberDelivery(0,10);
+    @Transactional(readOnly = true)
+    public List<Order> findAllByItemListNotFetchV1(){
+        return orderRepositoryOld.findAllWithMemberDeliveryV1(0,10);
+    }
+    @Transactional
+    public List<Order> findAllByItemListNotFetchV2(){
+        return orderRepositoryOld.findAllWithMemberDeliveryV1(0,10);
     }
 
 

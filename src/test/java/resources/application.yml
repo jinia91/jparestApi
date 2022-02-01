@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/Jpa_Study_ch1?serverTimezone=Asia/Seoul
+    username: jinia
+    password: 1234
+
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+        jdbc:
+          batch_size: 100
+#
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
