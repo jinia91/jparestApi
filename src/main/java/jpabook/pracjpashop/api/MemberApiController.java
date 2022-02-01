@@ -54,4 +54,22 @@ public class MemberApiController {
         return ResponseEntity
                 .ok(result);
     }
+
+    @GetMapping("api/v2/members")
+    public ResponseEntity<Object> getMembersWithOrders() {
+        List<MemberDto> memberDtos =
+                memberService.findAll()
+                        .stream()
+                        .map(member -> new MemberDto(member.getName(),member.getOderList().stream()
+                                .map(order -> order.getId()+"")
+                                .collect(Collectors.toList())))
+                        .collect(Collectors.toList());
+
+        Map<String,Object> result = new HashMap<>();
+        result.put("members", memberDtos);
+        result.put("Count", memberDtos.size());
+
+        return ResponseEntity
+                .ok(result);
+    }
 }

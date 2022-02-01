@@ -3,6 +3,7 @@ package jpabook.pracjpashop.domain;
 import jpabook.pracjpashop.domain.item.Item;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 
